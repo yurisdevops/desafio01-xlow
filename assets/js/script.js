@@ -56,8 +56,8 @@ const getProductData = async (productIds) => {
             <img src="${
               productDetails.images[0].imageUrl
             }" alt="${productName}" class="image-main">  
+            <h2 class="title">${productName}</h2>  
             <div class="mini">${images}</div>  
-            <h2>${productName}</h2>  
             <p class="price">  
             ${
               priceActualy > priceOld
@@ -67,7 +67,7 @@ const getProductData = async (productIds) => {
             <span class="price-actualy"> R$ ${priceActualy.toFixed(2)}</span>  
             </p>  
             
-            <button>Comprar</button>
+            <div class="btn-content"><button class="btn-buy">Comprar</button></div>
           `;
 
       const mini = productElement.querySelectorAll(".mini img");
@@ -85,30 +85,39 @@ const getProductData = async (productIds) => {
       continue;
     }
   }
-  const toggleButton = document.getElementById("toggle-layout");
-  toggleButton.addEventListener("click", () => {
-    const mobile = window.innerWidth < 768;
-    const columns =
-      getComputedStyle(content).gridTemplateColumns.split(" ").length;
-    if (mobile) {
-      if (columns === 1) {
-        content.style.gridTemplateColumns = "repeat(2, 1fr)";
-      } else {
-        content.style.gridTemplateColumns = "repeat(1, 1fr)";
-      }
-    } else {
-      if (columns === 4) {
-        content.style.gridTemplateColumns = "repeat(5, 1fr)";
-      } else {
-        content.style.gridTemplateColumns = "repeat(4, 1fr)";
-      }
-    }
-  });
+};
+
+const updateGridLayout = () => {
+  const content = document.getElementById("content");
+  const mobile = window.innerWidth <= 768;
+  if (mobile) {
+    content.style.gridTemplateColumns = "repeat(1, 1fr)";
+  } else {
+    content.style.gridTemplateColumns = "repeat(4, 1fr)";
+  }
 };
 
 const load = async () => {
   const productId = await fetchAllProducts();
   await getProductData(productId);
+
+  updateGridLayout();
+
+  window.addEventListener("resize", updateGridLayout);
+
+  const toggleButton = document.getElementById("toggle-layout");
+  toggleButton.addEventListener("click", () => {
+    const content = document.getElementById("content");
+    const columns =
+      getComputedStyle(content).gridTemplateColumns.split(" ").length;
+    if (window.innerWidth <= 768) {
+      content.style.gridTemplateColumns =
+        columns === 1 ? "repeat(2, 1fr)" : "repeat(1, 1fr)";
+    } else {
+      content.style.gridTemplateColumns =
+        columns === 4 ? "repeat(5, 1fr)" : "repeat(4, 1fr)";
+    }
+  });
 };
 
 load();
