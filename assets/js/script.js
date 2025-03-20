@@ -47,8 +47,8 @@ const getProductData = async (productIds) => {
         .join("");
       const productName = productData[0].productName;
 
-      const priceOld = productDetails.sellers[0].commertialOffer.Price;
-      const priceActualy = productDetails.sellers[0].commertialOffer.ListPrice;
+      const priceOld = productDetails.sellers[0].commertialOffer.ListPrice;
+      const priceActualy = productDetails.sellers[0].commertialOffer.Price;
 
       const productElement = document.createElement("div");
       productElement.classList.add("product");
@@ -60,7 +60,7 @@ const getProductData = async (productIds) => {
             <div class="mini">${images}</div>  
             <p class="price">  
             ${
-              priceActualy > priceOld
+              priceOld > priceActualy
                 ? `<span class="price-old"> R$ ${priceOld.toFixed(2)} </span>`
                 : ""
             }  
